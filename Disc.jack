@@ -1,0 +1,127 @@
+/**
+ * Represents a disc in the Hanoi Towers game.
+ * Each disc has a size (1-5) and can be moved between poles.
+ * The disc is drawn on screen as a rectangle with a diagonal pattern.
+ */
+class Disc {
+    field int size;      // Size of the disc (1-5)
+    field int x;         // Current x position
+    field int y;         // Current y position
+    
+    /** 
+     * Constructs a new disc with given size
+     * @param discSize The size of the disc (1-5)
+     */
+    constructor Disc new(int discSize) {
+        let size = discSize;
+        let x = 0;
+        let y = 0;
+        return this;
+    }
+    
+    /** 
+     * Sets the disc's position
+     * @param newX The new x-coordinate
+     * @param newY The new y-coordinate
+     */
+    method void setPosition(int newX, int newY) {
+        let x = newX;
+        let y = newY;
+        return;
+    }
+    
+    /** 
+     * Returns the disc's size
+     * @return The size of the disc (1-5)
+     */
+    method int getSize() {
+        return size;
+    }
+    
+    /** 
+     * Returns the disc's x position
+     * @return The current x-coordinate
+     */
+    method int getX() {
+        return x;
+    }
+    
+    /** 
+     * Returns the disc's y position
+     * @return The current y-coordinate
+     */
+    method int getY() {
+        return y;
+    }
+    
+    /** 
+     * Draws the disc on the screen
+     * The disc is drawn as a rectangle with width based on its size
+     * Size 1 = 30px, Size 2 = 40px, Size 3 = 50px, Size 4 = 60px, Size 5 = 70px
+     */
+    method void draw() {
+        var int x1, x2, y1, y2;
+        var int width;
+        
+        // Calculate disc width based on size
+        // Size 1 = 30px, Size 2 = 40px, Size 3 = 50px, Size 4 = 60px, Size 5 = 70px
+        let width = (size * 20);
+        
+        // Calculate screen coordinates (top-left and bottom-right corners)
+        let x1 = (x - (width / 2));  // Center the disc on the pole
+        let y1 = y;                   // Top of disc
+        let x2 = (x1 + width);        // Right edge
+        let y2 = (y1 + 20);           // Fixed height of 20px for all discs
+        
+        // Ensure coordinates are within screen bounds
+        if (x1 < 0) {
+            let x1 = 0;
+        }
+        if (x2 > 511) {
+            let x2 = 511;
+        }
+        if (y1 < 0) {
+            let y1 = 0;
+        }
+        if (y2 > 255) {
+            let y2 = 255;
+        }
+        
+        // Draw the disc
+        do Screen.setColor(true);  // Black color
+        do Screen.drawRectangle(x1, y1, x2, y2);
+        return;
+    }
+    
+    /** 
+     * Erases the disc from the screen
+     * Used when moving the disc or redrawing the game state
+     */
+    method void erase() {
+        do Screen.setColor(false);  // White color to erase
+        do Screen.drawRectangle(x, y, x + size, y + size);  // Erase disc area
+        return;
+    }
+    
+    /** 
+     * Disposes of this object
+     * Frees the memory allocated for this disc
+     */
+    method void dispose() {
+        do Memory.deAlloc(this);
+        return;
+    }
+
+    /** 
+     * Compare sizes of 2 discs
+     * @param other The disc to compare with
+     * @return true if the discs have the same size, false otherwise
+     */
+    method boolean isEqual(Disc other){
+        if ((other.getSize() > getSize()) | (other.getSize() < getSize())){
+            return false;
+        }
+        do Output.printString("Equal Discs!!");
+        return true;
+    }
+} 

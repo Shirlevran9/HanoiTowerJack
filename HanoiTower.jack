@@ -1,0 +1,455 @@
+/**
+ * Main game class for the Hanoi Towers puzzle.
+ * Manages the game state, poles, and user interaction.
+ * The game follows the classic rules of the Tower of Hanoi puzzle.
+ */
+class HanoiTower {
+    // Graphics fields
+    field boolean gameWon;  // Whether the game is won
+    field boolean needRedraw;  // Whether the game needs to be redrawn
+    field boolean needRedrawSelection;  // Whether selection needs to be redrawn
+    field boolean needRedrawGameOver;  // Whether game over message needs to be redrawn
+    field boolean showInvalidMove;  // Whether to show invalid move message
+    field int lettersLoc; // Where we start drawing the letters
+    
+
+    // Game fields
+    field int selectedPole; // Currently selected pole (1-3)
+    field Array poles;      // Array of three poles
+    field Pole sourcePole;
+    field Pole targetPole;
+    field int stepCount;    // Count of valid moves made
+    field char key; // current key pressed
+    field boolean running; // is the game runnig
+
+    // Static messages
+    static String selectedPoleMsg;
+    static String invalidMoveMsg;
+    static String gameWonMsg;
+    static String restartMsg;
+    static String instructionsMsg;
+    static String stepsMsg;
+    // Static msg frame locations 
+    static int msgFrameX1; 
+    static int msgFrameX2;
+    static int msgFrameY1;
+    static int msgFrameY2;
+    
+    /** 
+     * Constructs a new Hanoi Tower game
+     * Initializes the game state, creates poles, and sets up initial discs
+     */
+    constructor HanoiTower new() {
+        var int i;
+        var Pole currentPole;
+        var Disc currentDisc;
+        
+        let poles = Array.new(3);
+        let selectedPole = -1;
+        let gameWon = false;
+        // Set Graphics fields
+        let needRedraw = false;
+        let needRedrawSelection = false;
+        let needRedrawGameOver = false;
+        let showInvalidMove = false;
+        let stepCount = 0;
+        let lettersLoc = DrawElements.getRamLoc(16 * 2, 16);
+        let msgFrameX1 = 0;
+        let msgFrameX2 = 500;
+        let msgFrameY1 = 0;
+        let msgFrameY2 = 60;
+        
+        // Initialize message strings
+        let selectedPoleMsg = "Selected pole: ";
+        let invalidMoveMsg = "X INVALID MOVE X";
+        let gameWonMsg = "GAME WON! Steps: ";
+        let restartMsg = "Press R to restart or Q to quit";
+        let instructionsMsg = "Hanoi Tower - Use 1,2,3 to select poles, SPACE to cancel";
+        let stepsMsg = "Steps: ";
+        
+        // Create three poles with proper spacing
+        let i = 0;
+        while (i < 3) {
+            let currentPole = Pole.new((80 + (i * 176)), 230, (i + 1));
+            let poles[i] = currentPole;
+            let i = i + 1;
+        }
+        
+        // Add initial discs to first pole
+        let i = 5;
+        while (i > 0) {
+            let currentDisc = Disc.new(i);
+            let currentPole = poles[0];
+            do currentPole.addDisc(currentDisc);
+            let i = i - 1;
+        }
+        
+        return this;
+    }
+    
+    /** 
+     * Returns true if the game is won
+     * Checks if all discs are on the last pole in correct order
+     * @return true if the game is won, false otherwise
+     */
+    method boolean isWon() {
+        var Pole lastPole;
+        var Pole curPole;
+        var int i;
+        var boolean won;
+        
+        // Check if first two poles are empty
+        let i = 0;
+        while (i < 2) {
+            let curPole = poles[i];
+            if (~curPole.isEmpty()) {
+                return false;
+            }
+            let i = i + 1;
+        }
+        
+        // Check if last pole has all discs in correct order
+        let lastPole = poles[2];
+        if (~lastPole.isFull()) {
+            return false;
+        }
+        
+        return true;
+    }
+    
+    /** 
+     * Writes a message at the specified location
+     * @param content The message to write
+     * @param x The x coordinate (column)
+     * @param y The y coordinate (row)
+     */
+    function void writeMessage(String content, int x, int y) {
+        do Output.moveCursor(x, y);
+        do Output.printString(content);
+        return;
+    }
+
+    /** 
+     * Deletes a message at the specified location by overwriting it with spaces.
+     * @param content The message to be deleted (used to calculate length)
+     * @param x The x coordinate (column) where the message starts
+     * @param y The y coordinate (row) where the message starts
+     * @param oneMoreChar Whether to add one extra space for safety
+     */
+    function void deleteMessage(String content, int x, int y, boolean oneMoreChar) {
+        var int msgLen;
+        var int i;
+        var String spaceChar;
+
+        let spaceChar = " ";
+        do Output.moveCursor(x, y);
+        let msgLen = content.length() + 1;
+
+        if (oneMoreChar) { 
+            let msgLen = msgLen + 1;
+        }
+        let i = 1;
+        while (i < msgLen) {
+            do Output.printString(spaceChar);
+            let i = i + 1;
+        }
+        do spaceChar.dispose();
+        return;
+    }
+
+    /** 
+     * Redraws the entire game state including poles and discs.
+     * Called when major changes to the game state occur.
+     */
+    method void reDraw() {
+        var int i;
+        var Pole currentPole;
+        do clearGameSection();
+        do drawGameFrames();
+        
+        // Draw all poles
+        let i = 0;
+        while (i < 3) {
+            let currentPole = poles[i];
+            do currentPole.draw();
+            let i = i + 1;
+        }
+        let needRedraw = false;
+        return;
+    }
+
+    /** 
+     * Draws the current game state, including messages and UI elements.
+     * Only redraws the full game if needRedraw is true.
+     */
+    method void draw() {
+        if(needRedraw) { // Game needs redrawing
+            do reDraw();
+        }
+        
+        // Clear selection area
+        do HanoiTower.deleteMessage(selectedPoleMsg, 3, 3, true);
+        
+        // Draw selection indicator
+        if (selectedPole > 0) {
+            do Screen.setColor(true);
+            do HanoiTower.writeMessage(selectedPoleMsg, 3, 3);
+            do Output.printInt(selectedPole);
+        }
+        
+        // Draw invalid move message
+        if (showInvalidMove) {
+            do HanoiTower.writeMessage(invalidMoveMsg, 3, 3);
+        }
+        
+        // Draw game over message
+        if (gameWon) {
+            do Screen.setColor(true);
+            // Delete the steps counter
+            do HanoiTower.deleteMessage(stepsMsg, 4, 51, false);
+            do DrawElements.eraseIntChars(stepCount);
+            do HanoiTower.writeMessage(gameWonMsg, 3, 3);
+            do Output.printInt(stepCount);
+            do HanoiTower.writeMessage(restartMsg, 4, 3);
+        }
+        else {
+            // Draw steps counter at bottom left
+            // do HanoiTower.deleteMessage(stepsMsg, 4, 51, false);
+            // do DrawElements.eraseIntChars(stepCount);
+            do HanoiTower.writeMessage(stepsMsg, 4, 51);
+            do Output.printInt(stepCount);
+        }
+        
+        return;
+    }
+    
+    /** 
+     * Initializes the game screen with the frame and initial poles.
+     * Called once at the start of the game.
+     */
+    method void initScreen() {
+        var int i;
+        var Pole currentPole;
+
+        // Draw the permanent frame
+        do Screen.setColor(true);   // Black color for frame
+        do drawGameFrames();
+        
+        // Draw initial poles
+        let i = 0;
+        while (i < 3) {
+            let currentPole = poles[i];
+            do currentPole.draw();
+            let i = i + 1;
+        }
+        return;
+    }
+    
+    /** 
+     * Main game loop that handles user input and game state updates.
+     * Continues running until the user quits.
+     */
+    method void run() {
+        let running = true;
+        let key = 0;
+        
+        // Initialize screen once
+        do initScreen();
+        
+        while (running) {
+            do draw();  // Redraw
+            
+            // Wait for a key press
+            while (key = 0) {
+                let key = Keyboard.keyPressed();
+                do Sys.wait(5); // debounce
+            }
+            
+            // Handle key press
+            if (key = 81) {  // 'q' key
+                let running = false;
+            }
+            else {
+                if (gameWon) {
+                    if (key = 82) {  // 'r' key
+                        do restart();
+                    }
+                }
+                else {
+                    if (key = 32) {  // Space bar - clear selection
+                        let selectedPole = -1;
+                    }
+                    else {
+                        if (key = 49) {  // '1'
+                            do selectPole(1);
+                        }
+                        if (key = 50) {  // '2'
+                            do selectPole(2);
+                        }
+                        if (key = 51) {  // '3'
+                            do selectPole(3);
+                        }
+                    }
+                }
+            }
+            
+            // Wait for key release (while key is still pressed)
+            while (~(Keyboard.keyPressed() = 0)) {
+                do Sys.wait(5); // debounce release
+            }
+            
+            let key = 0; // Reset key after release
+        }
+
+        // Clean up before exiting
+        do dispose();
+        return;
+    }
+    
+    /** 
+     * Handles pole selection and disc movement.
+     * @param poleNumber The number of the pole being selected (1-3)
+     */
+    method void selectPole(int poleNumber) {
+        var Disc movingDisc;
+        
+        if ((poleNumber < 1) | (poleNumber > 3)) {
+            return;
+        }
+
+        if (poleNumber = selectedPole){ // Same pole! invalid
+            let selectedPole = -1;
+            let needRedrawSelection = true;
+            let showInvalidMove = true;
+            return;
+        }
+        
+        if (selectedPole = -1) {
+            // First selection - check if pole has discs
+            let sourcePole = poles[(poleNumber - 1)];
+            if (~sourcePole.isEmpty()) {
+                let selectedPole = poleNumber;
+                let needRedrawSelection = true;
+                let showInvalidMove = false;
+            }
+        }
+        else {
+            // Second selection - try to move disc
+            let targetPole = poles[(poleNumber - 1)];
+            
+            // Allow moving from any pole to any other pole if valid
+            let movingDisc = sourcePole.removeTopDisc();
+            if (targetPole.addDisc(movingDisc)) {
+                // Move successful
+                let needRedraw = true;
+                let stepCount = stepCount + 1;
+                let showInvalidMove = false;
+                if (isWon()) {
+                    let gameWon = true;
+                    let needRedrawGameOver = true;
+                }
+            }
+            else {
+                // Move failed - put disc back
+                do sourcePole.addDisc(movingDisc);
+                let showInvalidMove = true;
+            }
+            let selectedPole = -1;
+            let needRedrawSelection = true;
+        }
+        return;
+    }
+    
+    /** 
+     * Draws the game frame and initial instructions.
+     * Called once at the start of the game.
+     */
+    method void drawGameFrames() {
+        // Draw text box at the top
+        do Screen.setColor(true);   // Black color for frame
+        // Draw a rectangle of pattern for instructon etc
+        do DrawElements.drawDiagonalCubeLineVertical(msgFrameY1, msgFrameY2, msgFrameX1); //Y1 = 0
+        do DrawElements.drawDiagonalCubeLineVertical(msgFrameY1, msgFrameY2, msgFrameX2); // Y2 = 40
+        do DrawElements.drawDiagonalCubeLineHorizontal(msgFrameX1, msgFrameX2, msgFrameY1); // X1 = 0
+        do DrawElements.drawDiagonalCubeLineHorizontal(msgFrameX1, msgFrameX2, msgFrameY2);
+        
+        // Draw initial instructions
+        do HanoiTower.writeMessage(instructionsMsg, 2, 3);
+        return;
+    }
+
+    /** 
+     * Cleans up resources when the game is over.
+     * Disposes of all poles and their discs.
+     */
+    method void dispose() {
+        var int i;
+        var Pole currentPole;
+        
+        let i = 0;
+        while (i < 3) {
+            let currentPole = poles[i];
+            do currentPole.dispose();
+            let i = i + 1;
+        }
+        do poles.dispose();
+        return;
+    }
+
+    /** 
+     * Clears the game section of the screen.
+     * Used when redrawing the game state.
+     */
+    method void clearGameSection() {
+        do Screen.setColor(false);  // White color to clear
+        do Screen.drawRectangle(msgFrameX1, msgFrameY2 + 16, msgFrameX2, 255);  // Clear from 16 pixels below message frame to bottom of screen
+        return;
+    }
+
+    /** 
+     * Restarts the game by resetting all game state and recreating the initial setup.
+     */
+    method void restart() {
+        var int i;
+        var Pole currentPole;
+        var Disc currentDisc;
+        
+        // Reset game state
+        let selectedPole = -1;
+        let gameWon = false;
+        let needRedraw = true;
+        let needRedrawSelection = false;
+        let needRedrawGameOver = false;
+        let showInvalidMove = false;
+        let stepCount = 0;
+        
+        // Clear all poles
+        let i = 0;
+        while (i < 3) {
+            let currentPole = poles[i];
+            do currentPole.dispose();
+            let i = i + 1;
+        }
+        
+        // Create new poles
+        let i = 0;
+        while (i < 3) {
+            let currentPole = Pole.new((80 + (i * 176)), 230, (i + 1));
+            let poles[i] = currentPole;
+            let i = i + 1;
+        }
+        
+        // Add initial discs to first pole
+        let i = 5;
+        while (i > 0) {
+            let currentDisc = Disc.new(i);
+            let currentPole = poles[0];
+            do currentPole.addDisc(currentDisc);
+            let i = i - 1;
+        }
+        // Clear all screen
+        do Screen.clearScreen();
+        return;
+    }
+
+} 

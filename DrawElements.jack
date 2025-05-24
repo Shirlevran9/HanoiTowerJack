@@ -1,0 +1,206 @@
+/**
+ * A library for drawing letters and numbers on the screen.
+ * Each function draws a specific character at the given location.
+ */
+class DrawElements {
+    static int memAddress;
+    
+    /** 
+     * Returns the RAM location for a given screen coordinate
+     * @param x The x coordinate (column)
+     * @param y The y coordinate (row)
+     * @return The corresponding RAM location
+     */
+    function int getRamLoc(int x, int y) {
+        return (y * 32) + (x / 16);
+    }
+
+    /** 
+     * Draws the number 3 at the specified RAM location
+     * @param location The RAM location to draw at
+     */
+    function void draw3(int location) {
+        let memAddress = 16384+location;
+        if (memAddress > 24575){ // Make sure we are not stepping out of bounds
+            return;
+        }
+        do Memory.poke(memAddress+0, 32766);
+        do Memory.poke(memAddress+32, 16386);
+        do Memory.poke(memAddress+64, 16386);
+        do Memory.poke(memAddress+96, 24574);
+        do Memory.poke(memAddress+128, 20480);
+        do Memory.poke(memAddress+160, 20480);
+        do Memory.poke(memAddress+192, 24448);
+        do Memory.poke(memAddress+224, 16512);
+        do Memory.poke(memAddress+256, 16512);
+        do Memory.poke(memAddress+288, 24448);
+        do Memory.poke(memAddress+320, 20480);
+        do Memory.poke(memAddress+352, 20480);
+        do Memory.poke(memAddress+384, 24574);
+        do Memory.poke(memAddress+416, 16386);
+        do Memory.poke(memAddress+448, 16386);
+        do Memory.poke(memAddress+480, 32766);
+        return;
+    }
+
+    /** 
+     * Draws the number 2 at the specified RAM location
+     * @param location The RAM location to draw at
+     */
+    function void draw2(int location) {
+        let memAddress = 16384+location;
+        if (memAddress > 24575){
+            return;
+        }
+        do Memory.poke(memAddress+0, 8190);
+        do Memory.poke(memAddress+32, 4098);
+        do Memory.poke(memAddress+64, 4098);
+        do Memory.poke(memAddress+96, 5090);
+        do Memory.poke(memAddress+128, 4626);
+        do Memory.poke(memAddress+160, 4382);
+        do Memory.poke(memAddress+192, 6272);
+        do Memory.poke(memAddress+224, 1248);
+        do Memory.poke(memAddress+256, 528);
+        do Memory.poke(memAddress+288, 264);
+        do Memory.poke(memAddress+320, 132);
+        do Memory.poke(memAddress+352, 66);
+        do Memory.poke(memAddress+384, 33);
+        do Memory.poke(memAddress+416, 16353);
+        do Memory.poke(memAddress+448, 8194);
+        do Memory.poke(memAddress+480, 8188);
+        return;
+    }
+
+    /** 
+     * Draws the number 1 at the specified RAM location
+     * @param location The RAM location to draw at
+     */
+    function void draw1(int location) {
+        let memAddress = 16384+location;
+        if (memAddress > 24575){
+            return;
+        }
+        do Memory.poke(memAddress+0, 992);
+        do Memory.poke(memAddress+32, 528);
+        do Memory.poke(memAddress+64, 520);
+        do Memory.poke(memAddress+96, 516);
+        do Memory.poke(memAddress+128, 610);
+        do Memory.poke(memAddress+160, 593);
+        do Memory.poke(memAddress+192, 585);
+        do Memory.poke(memAddress+224, 583);
+        do Memory.poke(memAddress+256, 576);
+        do Memory.poke(memAddress+288, 576);
+        do Memory.poke(memAddress+320, 576);
+        do Memory.poke(memAddress+352, 576);
+        do Memory.poke(memAddress+384, 15996);
+        do Memory.poke(memAddress+416, 8196);
+        do Memory.poke(memAddress+448, 8196);
+        do Memory.poke(memAddress+480, 16380);
+        return;
+    }
+
+    /** 
+     * Draws a single diagonal pattern at the specified RAM location
+     * @param location The RAM location to draw at
+     */
+    function void drawDiagonalOnce(int location) {
+        let memAddress = 16384+location;
+        if (memAddress > 24575){
+            return;
+        }
+        do Memory.poke(memAddress+0, -28087);
+        do Memory.poke(memAddress+32, 18724);
+        do Memory.poke(memAddress+64, 9362);
+        do Memory.poke(memAddress+96, -28087);
+        do Memory.poke(memAddress+128, 18724);
+        do Memory.poke(memAddress+160, 9362);
+        do Memory.poke(memAddress+192, -28087);
+        do Memory.poke(memAddress+224, 18724);
+        do Memory.poke(memAddress+256, 9362);
+        do Memory.poke(memAddress+288, -28087);
+        do Memory.poke(memAddress+320, 18724);
+        do Memory.poke(memAddress+352, 9362);
+        do Memory.poke(memAddress+384, -28087);
+        do Memory.poke(memAddress+416, 18724);
+        do Memory.poke(memAddress+448, 9362);
+        do Memory.poke(memAddress+480, -28087);
+        return;
+    }
+
+    /** 
+     * Draws a horizontal line of diagonal patterns
+     * @param x_start Starting x coordinate
+     * @param x_end Ending x coordinate
+     * @param y The y coordinate for the line
+     */
+    function void drawDiagonalCubeLineHorizontal(int x_start, int x_end, int y) {
+        var int i;
+        var int end;
+        var int col;
+
+        let col = x_start;
+        
+        while (col < x_end) {
+            let i = DrawLetters.getRamLoc(col, y); 
+            do DrawLetters.drawDiagonalOnce(i);
+            let col = col + 16;
+        }        
+        return;
+    }
+
+    /** 
+     * Draws a vertical line of diagonal patterns
+     * @param y_start Starting y coordinate
+     * @param y_end Ending y coordinate
+     * @param x The x coordinate for the line
+     */
+    function void drawDiagonalCubeLineVertical(int y_start, int y_end, int x) {
+        var int i;
+        var int end;
+        var int row;
+
+        let row = y_start;
+        while (row < y_end) {
+            let i = DrawLetters.getRamLoc(x, row);
+            do DrawLetters.drawDiagonalOnce(i);
+            let row = row + 16;
+        }
+        
+        return;
+    }
+
+    /** 
+     * Erases a number of characters based on the number of digits in an integer.
+     * For example, for 100 it will write "   " (3 spaces).
+     * @param i The integer whose digit count determines how many spaces to write
+     */
+    function void eraseIntChars(int i) {
+        var int digitCount;
+        var int temp;
+        var int j;
+        var String spaceChar;
+        
+        let spaceChar = " ";
+        // Count number of digits
+        let digitCount = 0;
+        let temp = i;
+        if (temp = 0) {
+            let digitCount = 1;
+        }
+        else {
+            while (temp > 0) {
+                let digitCount = digitCount + 1;
+                let temp = temp / 10;
+            }
+        }
+        
+        // Write spaces
+        let j = 0;
+        while (j < digitCount) {
+            do Output.printString(spaceChar);
+            let j = j + 1;
+        }
+        do spaceChar.dispose();
+        return;
+    }
+}

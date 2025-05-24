@@ -1,0 +1,13 @@
+/**
+ * Main program for the Hanoi Towers game.
+ */
+class Main {
+    function void main() {
+        var HanoiTower game;
+        
+        let game = HanoiTower.new();
+        do game.run();
+        do game.dispose();
+        return;
+    }
+} 

@@ -1,0 +1,570 @@
+function DrawElements.getRamLoc 0
+push argument 1
+push constant 32
+call Math.multiply 2
+push argument 0
+push constant 16
+call Math.divide 2
+add
+return
+function DrawElements.draw3 0
+push constant 16384
+push argument 0
+add
+pop static 0
+push static 0
+push constant 24575
+gt
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push constant 0
+return
+label IF_FALSE0
+push static 0
+push constant 0
+add
+push constant 32766
+call Memory.poke 2
+pop temp 0
+push static 0
+push constant 32
+add
+push constant 16386
+call Memory.poke 2
+pop temp 0
+push static 0
+push constant 64
+add
+push constant 16386
+call Memory.poke 2
+pop temp 0
+push static 0
+push constant 96
+add
+push constant 24574
+call Memory.poke 2
+pop temp 0
+push static 0
+push constant 128
+add
+push constant 20480
+call Memory.poke 2
+pop temp 0
+push static 0
+push constant 160
+add
+push constant 20480
+call Memory.poke 2
+pop temp 0
+push static 0
+push constant 192
+add
+push constant 24448
+call Memory.poke 2
+pop temp 0
+push static 0
+push constant 224
+add
+push constant 16512
+call Memory.poke 2
+pop temp 0
+push static 0
+push constant 256
+add
+push constant 16512
+call Memory.poke 2
+pop temp 0
+push static 0
+push constant 288
+add
+push constant 24448
+call Memory.poke 2
+pop temp 0
+push static 0
+push constant 320
+add
+push constant 20480
+call Memory.poke 2
+pop temp 0
+push static 0
+push constant 352
+add
+push constant 20480
+call Memory.poke 2
+pop temp 0
+push static 0
+push constant 384
+add
+push constant 24574
+call Memory.poke 2
+pop temp 0
+push static 0
+push constant 416
+add
+push constant 16386
+call Memory.poke 2
+pop temp 0
+push static 0
+push constant 448
+add
+push constant 16386
+call Memory.poke 2
+pop temp 0
+push static 0
+push constant 480
+add
+push constant 32766
+call Memory.poke 2
+pop temp 0
+push constant 0
+return
+function DrawElements.draw2 0
+push constant 16384
+push argument 0
+add
+pop static 0
+push static 0
+push constant 24575
+gt
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push constant 0
+return
+label IF_FALSE0
+push static 0
+push constant 0
+add
+push constant 8190
+call Memory.poke 2
+pop temp 0
+push static 0
+push constant 32
+add
+push constant 4098
+call Memory.poke 2
+pop temp 0
+push static 0
+push constant 64
+add
+push constant 4098
+call Memory.poke 2
+pop temp 0
+push static 0
+push constant 96
+add
+push constant 5090
+call Memory.poke 2
+pop temp 0
+push static 0
+push constant 128
+add
+push constant 4626
+call Memory.poke 2
+pop temp 0
+push static 0
+push constant 160
+add
+push constant 4382
+call Memory.poke 2
+pop temp 0
+push static 0
+push constant 192
+add
+push constant 6272
+call Memory.poke 2
+pop temp 0
+push static 0
+push constant 224
+add
+push constant 1248
+call Memory.poke 2
+pop temp 0
+push static 0
+push constant 256
+add
+push constant 528
+call Memory.poke 2
+pop temp 0
+push static 0
+push constant 288
+add
+push constant 264
+call Memory.poke 2
+pop temp 0
+push static 0
+push constant 320
+add
+push constant 132
+call Memory.poke 2
+pop temp 0
+push static 0
+push constant 352
+add
+push constant 66
+call Memory.poke 2
+pop temp 0
+push static 0
+push constant 384
+add
+push constant 33
+call Memory.poke 2
+pop temp 0
+push static 0
+push constant 416
+add
+push constant 16353
+call Memory.poke 2
+pop temp 0
+push static 0
+push constant 448
+add
+push constant 8194
+call Memory.poke 2
+pop temp 0
+push static 0
+push constant 480
+add
+push constant 8188
+call Memory.poke 2
+pop temp 0
+push constant 0
+return
+function DrawElements.draw1 0
+push constant 16384
+push argument 0
+add
+pop static 0
+push static 0
+push constant 24575
+gt
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push constant 0
+return
+label IF_FALSE0
+push static 0
+push constant 0
+add
+push constant 992
+call Memory.poke 2
+pop temp 0
+push static 0
+push constant 32
+add
+push constant 528
+call Memory.poke 2
+pop temp 0
+push static 0
+push constant 64
+add
+push constant 520
+call Memory.poke 2
+pop temp 0
+push static 0
+push constant 96
+add
+push constant 516
+call Memory.poke 2
+pop temp 0
+push static 0
+push constant 128
+add
+push constant 610
+call Memory.poke 2
+pop temp 0
+push static 0
+push constant 160
+add
+push constant 593
+call Memory.poke 2
+pop temp 0
+push static 0
+push constant 192
+add
+push constant 585
+call Memory.poke 2
+pop temp 0
+push static 0
+push constant 224
+add
+push constant 583
+call Memory.poke 2
+pop temp 0
+push static 0
+push constant 256
+add
+push constant 576
+call Memory.poke 2
+pop temp 0
+push static 0
+push constant 288
+add
+push constant 576
+call Memory.poke 2
+pop temp 0
+push static 0
+push constant 320
+add
+push constant 576
+call Memory.poke 2
+pop temp 0
+push static 0
+push constant 352
+add
+push constant 576
+call Memory.poke 2
+pop temp 0
+push static 0
+push constant 384
+add
+push constant 15996
+call Memory.poke 2
+pop temp 0
+push static 0
+push constant 416
+add
+push constant 8196
+call Memory.poke 2
+pop temp 0
+push static 0
+push constant 448
+add
+push constant 8196
+call Memory.poke 2
+pop temp 0
+push static 0
+push constant 480
+add
+push constant 16380
+call Memory.poke 2
+pop temp 0
+push constant 0
+return
+function DrawElements.drawDiagonalOnce 0
+push constant 16384
+push argument 0
+add
+pop static 0
+push static 0
+push constant 24575
+gt
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push constant 0
+return
+label IF_FALSE0
+push static 0
+push constant 0
+add
+push constant 28087
+neg
+call Memory.poke 2
+pop temp 0
+push static 0
+push constant 32
+add
+push constant 18724
+call Memory.poke 2
+pop temp 0
+push static 0
+push constant 64
+add
+push constant 9362
+call Memory.poke 2
+pop temp 0
+push static 0
+push constant 96
+add
+push constant 28087
+neg
+call Memory.poke 2
+pop temp 0
+push static 0
+push constant 128
+add
+push constant 18724
+call Memory.poke 2
+pop temp 0
+push static 0
+push constant 160
+add
+push constant 9362
+call Memory.poke 2
+pop temp 0
+push static 0
+push constant 192
+add
+push constant 28087
+neg
+call Memory.poke 2
+pop temp 0
+push static 0
+push constant 224
+add
+push constant 18724
+call Memory.poke 2
+pop temp 0
+push static 0
+push constant 256
+add
+push constant 9362
+call Memory.poke 2
+pop temp 0
+push static 0
+push constant 288
+add
+push constant 28087
+neg
+call Memory.poke 2
+pop temp 0
+push static 0
+push constant 320
+add
+push constant 18724
+call Memory.poke 2
+pop temp 0
+push static 0
+push constant 352
+add
+push constant 9362
+call Memory.poke 2
+pop temp 0
+push static 0
+push constant 384
+add
+push constant 28087
+neg
+call Memory.poke 2
+pop temp 0
+push static 0
+push constant 416
+add
+push constant 18724
+call Memory.poke 2
+pop temp 0
+push static 0
+push constant 448
+add
+push constant 9362
+call Memory.poke 2
+pop temp 0
+push static 0
+push constant 480
+add
+push constant 28087
+neg
+call Memory.poke 2
+pop temp 0
+push constant 0
+return
+function DrawElements.drawDiagonalCubeLineHorizontal 3
+push argument 0
+pop local 2
+label WHILE_EXP0
+push local 2
+push argument 1
+lt
+not
+if-goto WHILE_END0
+push local 2
+push argument 2
+call DrawLetters.getRamLoc 2
+pop local 0
+push local 0
+call DrawLetters.drawDiagonalOnce 1
+pop temp 0
+push local 2
+push constant 16
+add
+pop local 2
+goto WHILE_EXP0
+label WHILE_END0
+push constant 0
+return
+function DrawElements.drawDiagonalCubeLineVertical 3
+push argument 0
+pop local 2
+label WHILE_EXP0
+push local 2
+push argument 1
+lt
+not
+if-goto WHILE_END0
+push argument 2
+push local 2
+call DrawLetters.getRamLoc 2
+pop local 0
+push local 0
+call DrawLetters.drawDiagonalOnce 1
+pop temp 0
+push local 2
+push constant 16
+add
+pop local 2
+goto WHILE_EXP0
+label WHILE_END0
+push constant 0
+return
+function DrawElements.eraseIntChars 4
+push constant 1
+call String.new 1
+push constant 32
+call String.appendChar 2
+pop local 3
+push constant 0
+pop local 0
+push argument 0
+pop local 1
+push local 1
+push constant 0
+eq
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push constant 1
+pop local 0
+goto IF_END0
+label IF_FALSE0
+label WHILE_EXP0
+push local 1
+push constant 0
+gt
+not
+if-goto WHILE_END0
+push local 0
+push constant 1
+add
+pop local 0
+push local 1
+push constant 10
+call Math.divide 2
+pop local 1
+goto WHILE_EXP0
+label WHILE_END0
+label IF_END0
+push constant 0
+pop local 2
+label WHILE_EXP1
+push local 2
+push local 0
+lt
+not
+if-goto WHILE_END1
+push local 3
+call Output.printString 1
+pop temp 0
+push local 2
+push constant 1
+add
+pop local 2
+goto WHILE_EXP1
+label WHILE_END1
+push local 3
+call String.dispose 1
+pop temp 0
+push constant 0
+return

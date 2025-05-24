@@ -1,0 +1,202 @@
+/**
+ * Represents a pole in the Hanoi Towers game.
+ * Each pole can hold multiple discs in a stack, with larger discs at the bottom.
+ * The pole is drawn on screen with its discs stacked vertically.
+ */
+class Pole {
+    field Array discs;      // Array of discs on this pole
+    field int discCount;    // Number of discs on this pole
+    field int x;            // X position of the pole
+    field int baseY;        // Base Y position of the pole
+    field int poleNum;      // Number of the pole (1, 2, or 3)
+    
+    /** 
+     * Constructs a new pole at the given position
+     * @param poleX The x-coordinate of the pole
+     * @param poleBaseY The y-coordinate of the base of the pole
+     * @param curPoleNum The number of this pole (1, 2, or 3)
+     */
+    constructor Pole new(int poleX, int poleBaseY, int curPoleNum) {
+        let discs = Array.new(5);  // Maximum 5 discs per pole
+        let discCount = 0;
+        let x = poleX;
+        let baseY = poleBaseY;
+        let poleNum = curPoleNum;
+        return this;
+    }
+    
+    /** 
+     * Returns true if the pole has no discs
+     * @return true if the pole is empty, false otherwise
+     */
+    method boolean isEmpty() {
+        return (discCount = 0);
+    }
+    
+    /** 
+     * Returns true if the pole has reached its maximum capacity
+     * @return true if the pole is full (5 discs), false otherwise
+     */
+    method boolean isFull() {
+        return (discCount = 5);
+    }
+    
+    /** 
+     * Returns the top disc on the pole without removing it
+     * @return The top disc, or null if the pole is empty
+     */
+    method Disc getTopDisc() {
+        var Disc topDisc;
+        if (discCount = 0) {
+            return null;
+        }
+        let topDisc = discs[(discCount - 1)];
+        return topDisc;
+    }
+    
+    /** 
+     * Adds a disc to the top of the pole if the move is valid
+     * @param disc The disc to add
+     * @return true if the disc was added successfully, false if the move was invalid
+     */
+    method boolean addDisc(Disc disc) {
+        var Disc topDisc;
+        
+        if (isFull()) {
+            return false;
+        }
+        
+        if (~isEmpty()) {
+            let topDisc = getTopDisc();
+            if (disc.getSize() > topDisc.getSize()) {
+                return false;  // Can't place larger disc on smaller one
+            }
+        }
+        
+        let discs[discCount] = disc;
+        let discCount = (discCount + 1);
+        do disc.setPosition(x, (baseY - (discCount * 30)));  // Stack discs with 30px spacing
+        return true;
+    }
+    
+    /** 
+     * Removes and returns the top disc from the pole
+     * @return The removed disc, or null if the pole is empty
+     */
+    method Disc removeTopDisc() {
+        var Disc topDisc;
+        
+        if (isEmpty()) {
+            return null;
+        }
+        
+        let discCount = (discCount - 1);
+        let topDisc = discs[discCount];
+        let discs[discCount] = null;
+        return topDisc;
+    }
+    
+    /** 
+     * Draws the pole and all its discs on the screen
+     * The pole is drawn as two vertical lines with discs stacked on top
+     */
+    method void draw() {
+        var int i;
+        var Disc currentDisc;
+        var int poleTop;
+        
+        // Calculate pole top position (150px tall pole)
+        let poleTop = (baseY - 150);
+        
+        // Ensure coordinates are within screen bounds
+        if (poleTop < 0) {
+            let poleTop = 0;
+        }
+        if (baseY > 255) {
+            let baseY = 255;
+        }
+        if (x < 0) {
+            let x = 0;
+        }
+        if (x > 511) {
+            let x = 511;
+        }
+        
+        // Draw the pole
+        do Screen.setColor(true);  // Black color
+        do Screen.drawLine(x - 5, baseY, x - 5, poleTop);
+        // Draw Second line
+        do Screen.drawLine(x + 5, baseY, x + 5, poleTop);
+        // Draw the pole number underneath
+        do drawPoleNum();
+        
+        // Draw all discs
+        let i = 0;
+        while (i < discCount) {
+            let currentDisc = discs[i];
+            do currentDisc.draw();
+            let i = i + 1;
+        }
+        return;
+    }
+
+    /** 
+     * Draws the pole number (1, 2, or 3) underneath the pole
+     * Uses the DrawElements class to draw the numbers
+     */
+    method void drawPoleNum() {
+        var int loc;
+        let loc = DrawElements.getRamLoc(x, (baseY + 5));
+        if (poleNum = 1) {
+            do DrawElements.draw1(loc);
+        }
+        if (poleNum = 2) {
+            do DrawElements.draw2(loc);
+        }
+        if (poleNum = 3) {
+            do DrawElements.draw3(loc);
+        }
+        return;
+    }
+
+    /** 
+     * Disposes of all resources used by this pole
+     * Cleans up all discs and the disc array
+     */
+    method void dispose() {
+        var int i;
+        var Disc currentDisc;
+        
+        let i = 0;
+        while (i < discCount) {
+            let currentDisc = discs[i];
+            do currentDisc.dispose();
+            let i = i + 1;
+        }
+        do discs.dispose();
+        return;
+    }
+
+    /** 
+     * Erases the pole and all its discs from the screen
+     * Used when redrawing the game state
+     */
+    method void erase() {
+        var int i;
+        var Disc currentDisc;
+        
+        // Erase all discs
+        let i = 0;
+        while (i < discCount) {
+            let currentDisc = discs[i];
+            do currentDisc.erase();
+            let i = i + 1;
+        }
+        
+        // Erase the pole
+        do Screen.setColor(false);  // White color to erase
+        do Screen.drawRectangle(x, baseY, x + 20, baseY + 200);  // Erase pole area
+        
+        return;
+    }
+} 
