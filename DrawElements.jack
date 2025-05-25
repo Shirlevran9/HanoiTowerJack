@@ -12,7 +12,7 @@ class DrawElements {
      * @return The corresponding RAM location
      */
     function int getRamLoc(int x, int y) {
-        return (y * 32) + (x / 16);
+        return (Math.multiply(y, 32)) + (Math.divide(x, 16));
     }
 
     /** 
@@ -141,8 +141,8 @@ class DrawElements {
         let col = x_start;
         
         while (col < x_end) {
-            let i = DrawLetters.getRamLoc(col, y); 
-            do DrawLetters.drawDiagonalOnce(i);
+            let i = DrawElements.getRamLoc(col, y); 
+            do DrawElements.drawDiagonalOnce(i);
             let col = col + 16;
         }        
         return;
@@ -161,8 +161,8 @@ class DrawElements {
 
         let row = y_start;
         while (row < y_end) {
-            let i = DrawLetters.getRamLoc(x, row);
-            do DrawLetters.drawDiagonalOnce(i);
+            let i = DrawElements.getRamLoc(x, row);
+            do DrawElements.drawDiagonalOnce(i);
             let row = row + 16;
         }
         
@@ -182,8 +182,8 @@ class DrawElements {
         
         let spaceChar = " ";
         // Count number of digits
+        let temp = Math.abs(i);  // Handle negative numbers
         let digitCount = 0;
-        let temp = i;
         if (temp = 0) {
             let digitCount = 1;
         }

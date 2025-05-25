@@ -106,21 +106,12 @@ class Pole {
         var int poleTop;
         
         // Calculate pole top position (150px tall pole)
-        let poleTop = (baseY - 150);
+        let poleTop = baseY - 150;
         
         // Ensure coordinates are within screen bounds
-        if (poleTop < 0) {
-            let poleTop = 0;
-        }
-        if (baseY > 255) {
-            let baseY = 255;
-        }
-        if (x < 0) {
-            let x = 0;
-        }
-        if (x > 511) {
-            let x = 511;
-        }
+        let poleTop = Math.max(0, poleTop);
+        let baseY = Math.min(255, baseY);
+        let x = Math.max(0, Math.min(511, x));
         
         // Draw the pole
         do Screen.setColor(true);  // Black color

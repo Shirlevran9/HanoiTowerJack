@@ -472,10 +472,10 @@ not
 if-goto WHILE_END0
 push local 2
 push argument 2
-call DrawLetters.getRamLoc 2
+call DrawElements.getRamLoc 2
 pop local 0
 push local 0
-call DrawLetters.drawDiagonalOnce 1
+call DrawElements.drawDiagonalOnce 1
 pop temp 0
 push local 2
 push constant 16
@@ -496,10 +496,10 @@ not
 if-goto WHILE_END0
 push argument 2
 push local 2
-call DrawLetters.getRamLoc 2
+call DrawElements.getRamLoc 2
 pop local 0
 push local 0
-call DrawLetters.drawDiagonalOnce 1
+call DrawElements.drawDiagonalOnce 1
 pop temp 0
 push local 2
 push constant 16
@@ -515,10 +515,11 @@ call String.new 1
 push constant 32
 call String.appendChar 2
 pop local 3
+push argument 0
+call Math.abs 1
+pop local 1
 push constant 0
 pop local 0
-push argument 0
-pop local 1
 push local 1
 push constant 0
 eq
